@@ -109,8 +109,8 @@ class CollectiveController extends Controller
         //
         if($collective ->owner($collective->user_id)){
             $this->validate($request,[
-                'titre' => 'required|min:10|unique:collectives,id,'.$collective->id,
-                'description' => 'required|min:10',
+                'titre' => 'required|unique:collectives,id,'.$collective->id,
+                'description' => 'required',
                 'category_id' => 'required|numeric'
             ]);
             $data = $request -> except('_token','_method');

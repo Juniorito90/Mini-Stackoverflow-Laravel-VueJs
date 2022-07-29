@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Commentaire;
+use App\Models\User;
 use App\Models\Question;
 use Illuminate\Http\Request;
 
@@ -92,5 +93,10 @@ class CommentaireController extends Controller
     public function destroy(Commentaire $commentaire)
     {
         //
+    }
+
+    public function valider($id){
+        $commentaire = User::find($id);
+        $commentaire-> increment('validation');
     }
 }

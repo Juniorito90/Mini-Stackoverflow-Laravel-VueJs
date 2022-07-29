@@ -59,8 +59,8 @@ class QuestionController extends Controller
     {
         //
         $this->validate($request,[
-            'titre' => 'required|min:10|unique:questions',
-            'body' => 'required|min:10',
+            'titre' => 'required|unique:questions',
+            'body' => 'required',
             'category_id' => 'required|numeric'
         ]);
         $data = $request -> except('_token');

@@ -16,5 +16,3 @@ Route::resource('collectives', 'App\Http\Controllers\CollectiveController');
 Route::resource('questions', 'App\Http\Controllers\QuestionController');
 
 Route::get('/{category?}', 'App\Http\Controllers\HomeController@index')->name('home');
-
-

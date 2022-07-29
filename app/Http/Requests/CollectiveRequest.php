@@ -25,8 +25,8 @@ class CollectiveRequest extends FormRequest
     {
         return [
             //
-            'titre' => 'required|min:10|unique:collectives',
-            'description' => 'required|min:10',
+            'titre' => 'required|unique:collectives',
+            'description' => 'required',
             'category_id' => 'required|numeric'
         ];
     }

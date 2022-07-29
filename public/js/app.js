@@ -5369,19 +5369,36 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: ['question_id', 'user_id', 'verified_user'],
+  name: 'App',
+  props: ['question_id', 'user_id', 'verified_user', 'validation'],
   data: function data() {
     return {
       body: '',
-      comments: []
+      comments: [],
+      nbValidation: 0,
+      to: !this.user_id && !this.verified_user ? '/login' : '/email/verify'
     };
   },
   mounted: function mounted() {
     this.getComments();
+    this.nbValidation = this.validation;
+    this.valide = 1;
   },
   methods: {
-    addComments: function addComments() {
+    showAlert: function showAlert() {
+      alert("Vous avez validé ce commentaire!");
+    },
+    valider: function valider() {
       var _this = this;
+
+      axios.get("/api/questions/".concat(this.user_id, "/valider")).then(function (res) {
+        _this.nbValidation++;
+      })["catch"](function (err) {
+        return console.log(err);
+      });
+    },
+    addComments: function addComments() {
+      var _this2 = this;
 
       var comment = {
         body: this.body,
@@ -5390,19 +5407,19 @@ __webpack_require__.r(__webpack_exports__);
       };
       axios.post("/api/comments/add", comment).then(function (res) {
         if (res.data.succès) {
-          _this.body = '';
+          _this2.body = '';
 
-          _this.getComments();
+          _this2.getComments();
         }
       })["catch"](function (err) {
         return console.log(err);
       });
     },
     getComments: function getComments() {
-      var _this2 = this;
+      var _this3 = this;
 
       axios.get("/api/question/".concat(this.question_id, "/comments")).then(function (res) {
-        _this2.comments = res.data;
+        _this3.comments = res.data;
       })["catch"](function (err) {
         return console.log(err);
       });
@@ -5469,6 +5486,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "render": () => (/* binding */ render),
 /* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
 /* harmony export */ });
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 var render = function render() {
   var _vm = this,
       _c = _vm._self._c;
@@ -5496,7 +5515,7 @@ var render = function render() {
     attrs: {
       cols: "30",
       rows: "2",
-      placeholder: "Tape ici..."
+      placeholder: "Tapez ici..."
     },
     domProps: {
       value: _vm.body
@@ -5522,19 +5541,30 @@ var render = function render() {
     }
   }, [_vm._v("Envoyer")])])]) : _c("div", [_c("a", {
     staticClass: "btn btn-link",
-    attrs: {
+    attrs: _defineProperty({
       href: "/login"
-    }
-  }, [_vm._v("\n                        Connectez-vous pour commenter.\n                    ")])]), _vm._v(" "), _vm.comments.length ? _c("ul", {
+    }, "href", _vm.to)
+  }, [_vm._v("\n                        Connectez-vous pour commenter./ Vérifier votre compte.\n                    ")])]), _vm._v(" "), _vm.comments.length ? _c("ul", {
     staticClass: "list-group"
   }, _vm._l(_vm.comments, function (comment, index) {
     return _c("li", {
       key: index,
       staticClass: "list-group-item d-flex flex-column"
-    }, [_c("span", [_c("b", [_vm._v(_vm._s(comment.user.name) + ": ")]), _c("i", [_vm._v(_vm._s(comment.body))])]), _vm._v(" "), _c("span", [_vm._v(_vm._s(comment.created_at))])]);
+    }, [_c("span", [_c("b", [_vm._v(_vm._s(comment.user.name) + ": ")]), _c("i", [_vm._v(_vm._s(comment.body))])]), _vm._v(" "), _c("span", [_vm._v(_vm._s(comment.created_at))]), _vm._v(" "), _vm.valide ? _c("div", {
+      attrs: {
+        id: "app"
+      }
+    }, [_c("span", [_c("button", {
+      staticClass: "btn btn-sm btn-success",
+      on: {
+        click: [_vm.valider, function ($event) {
+          return _vm.showAlert();
+        }]
+      }
+    }, [_vm._v("Valider")])])]) : _vm._e()]);
   }), 0) : _c("div", {
     staticClass: "alert alert-dark"
-  }, [_vm._v("\n                    Aucun commentaire pour l'instant !\n                ")])])])])]);
+  }, [_vm._v("\n                    Aucun commentaire pour l'instant!\n                ")])])])])]);
 };
 
 var staticRenderFns = [];
@@ -28635,6 +28665,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "useAttrs": () => (/* binding */ useAttrs),
 /* harmony export */   "useCssModule": () => (/* binding */ useCssModule),
 /* harmony export */   "useCssVars": () => (/* binding */ useCssVars),
+/* harmony export */   "useListeners": () => (/* binding */ useListeners),
 /* harmony export */   "useSlots": () => (/* binding */ useSlots),
 /* harmony export */   "version": () => (/* binding */ version),
 /* harmony export */   "watch": () => (/* binding */ watch),
@@ -28643,7 +28674,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "watchSyncEffect": () => (/* binding */ watchSyncEffect)
 /* harmony export */ });
 /*!
- * Vue.js v2.7.7
+ * Vue.js v2.7.8
  * (c) 2014-2022 Evan You
  * Released under the MIT License.
  */
@@ -29647,7 +29678,7 @@ function defineReactive(obj, key, val, customSetter, shallow, mock) {
                 // #7981: for accessor properties without setter
                 return;
             }
-            else if (isRef(value) && !isRef(newVal)) {
+            else if (!shallow && isRef(value) && !isRef(newVal)) {
                 value.value = newVal;
                 return;
             }
@@ -30938,7 +30969,19 @@ function createSetupContext(vm) {
     var exposeCalled = false;
     return {
         get attrs() {
-            return initAttrsProxy(vm);
+            if (!vm._attrsProxy) {
+                var proxy = (vm._attrsProxy = {});
+                def(proxy, '_v_attr_proxy', true);
+                syncSetupProxy(proxy, vm.$attrs, emptyObject, vm, '$attrs');
+            }
+            return vm._attrsProxy;
+        },
+        get listeners() {
+            if (!vm._listenersProxy) {
+                var proxy = (vm._listenersProxy = {});
+                syncSetupProxy(proxy, vm.$listeners, emptyObject, vm, '$listeners');
+            }
+            return vm._listenersProxy;
         },
         get slots() {
             return initSlotsProxy(vm);
@@ -30959,20 +31002,12 @@ function createSetupContext(vm) {
         }
     };
 }
-function initAttrsProxy(vm) {
-    if (!vm._attrsProxy) {
-        var proxy = (vm._attrsProxy = {});
-        def(proxy, '_v_attr_proxy', true);
-        syncSetupAttrs(proxy, vm.$attrs, emptyObject, vm);
-    }
-    return vm._attrsProxy;
-}
-function syncSetupAttrs(to, from, prev, instance) {
+function syncSetupProxy(to, from, prev, instance, type) {
     var changed = false;
     for (var key in from) {
         if (!(key in to)) {
             changed = true;
-            defineProxyAttr(to, key, instance);
+            defineProxyAttr(to, key, instance, type);
         }
         else if (from[key] !== prev[key]) {
             changed = true;
@@ -30986,12 +31021,12 @@ function syncSetupAttrs(to, from, prev, instance) {
     }
     return changed;
 }
-function defineProxyAttr(proxy, key, instance) {
+function defineProxyAttr(proxy, key, instance, type) {
     Object.defineProperty(proxy, key, {
         enumerable: true,
         configurable: true,
         get: function () {
-            return instance.$attrs[key];
+            return instance[type][key];
         }
     });
 }
@@ -31012,16 +31047,26 @@ function syncSetupSlots(to, from) {
     }
 }
 /**
- * @internal use manual type def
+ * @internal use manual type def because public setup context type relies on
+ * legacy VNode types
  */
 function useSlots() {
     return getContext().slots;
 }
 /**
- * @internal use manual type def
+ * @internal use manual type def because public setup context type relies on
+ * legacy VNode types
  */
 function useAttrs() {
     return getContext().attrs;
+}
+/**
+ * Vue 2 only
+ * @internal use manual type def because public setup context type relies on
+ * legacy VNode types
+ */
+function useListeners() {
+    return getContext().listeners;
 }
 function getContext() {
     if ( true && !currentInstance) {
@@ -31625,12 +31670,19 @@ function updateChildComponent(vm, propsData, listeners, parentVnode, renderChild
     if (vm._attrsProxy) {
         // force update if attrs are accessed and has changed since it may be
         // passed to a child component.
-        if (syncSetupAttrs(vm._attrsProxy, attrs, (prevVNode.data && prevVNode.data.attrs) || emptyObject, vm)) {
+        if (syncSetupProxy(vm._attrsProxy, attrs, (prevVNode.data && prevVNode.data.attrs) || emptyObject, vm, '$attrs')) {
             needsForceUpdate = true;
         }
     }
     vm.$attrs = attrs;
-    vm.$listeners = listeners || emptyObject;
+    // update listeners
+    listeners = listeners || emptyObject;
+    var prevListeners = vm.$options._parentListeners;
+    if (vm._listenersProxy) {
+        syncSetupProxy(vm._listenersProxy, listeners, prevListeners || emptyObject, vm, '$listeners');
+    }
+    vm.$listeners = vm.$options._parentListeners = listeners;
+    updateComponentListeners(vm, listeners, prevListeners);
     // update props
     if (propsData && vm.$options.props) {
         toggleObserving(false);
@@ -31645,11 +31697,6 @@ function updateChildComponent(vm, propsData, listeners, parentVnode, renderChild
         // keep a copy of raw propsData
         vm.$options.propsData = propsData;
     }
-    // update listeners
-    listeners = listeners || emptyObject;
-    var oldListeners = vm.$options._parentListeners;
-    vm.$options._parentListeners = listeners;
-    updateComponentListeners(vm, listeners, oldListeners);
     // resolve slots + force update if has children
     if (needsForceUpdate) {
         vm.$slots = resolveSlots(renderChildren, parentVnode.context);
@@ -32611,7 +32658,7 @@ var onRenderTriggered = createLifeCycle('renderTriggered');
 /**
  * Note: also update dist/vue.runtime.mjs when adding new exports to this file.
  */
-var version = '2.7.7';
+var version = '2.7.8';
 /**
  * @internal type is manually declared in <root>/types/v3-define-component.d.ts
  */
@@ -39560,10 +39607,7 @@ function genElement(el, state) {
             // check if this is a component in <script setup>
             var bindings = state.options.bindings;
             if (maybeComponent && bindings && bindings.__isScriptSetup !== false) {
-                tag =
-                    checkBindingType(bindings, el.tag) ||
-                        checkBindingType(bindings, camelize(el.tag)) ||
-                        checkBindingType(bindings, capitalize(camelize(el.tag)));
+                tag = checkBindingType(bindings, el.tag);
             }
             if (!tag)
                 tag = "'".concat(el.tag, "'");
@@ -39580,9 +39624,29 @@ function genElement(el, state) {
     }
 }
 function checkBindingType(bindings, key) {
-    var type = bindings[key];
-    if (type && type.startsWith('setup')) {
-        return key;
+    var camelName = camelize(key);
+    var PascalName = capitalize(camelName);
+    var checkType = function (type) {
+        if (bindings[key] === type) {
+            return key;
+        }
+        if (bindings[camelName] === type) {
+            return camelName;
+        }
+        if (bindings[PascalName] === type) {
+            return PascalName;
+        }
+    };
+    var fromConst = checkType("setup-const" /* BindingTypes.SETUP_CONST */) ||
+        checkType("setup-reactive-const" /* BindingTypes.SETUP_REACTIVE_CONST */);
+    if (fromConst) {
+        return fromConst;
+    }
+    var fromMaybeRef = checkType("setup-let" /* BindingTypes.SETUP_LET */) ||
+        checkType("setup-ref" /* BindingTypes.SETUP_REF */) ||
+        checkType("setup-maybe-ref" /* BindingTypes.SETUP_MAYBE_REF */);
+    if (fromMaybeRef) {
+        return fromMaybeRef;
     }
 }
 // hoist static sub-trees out
