@@ -30,7 +30,7 @@
                             <!-- commentaire_id= {{ comment.user.id }} -->
                             <span><b>{{comment.user.name}}: </b><i>{{comment.body}}</i></span>
                             <span>{{comment.created_at}}</span>
-                            <div v-if="valide" id="app">
+                            <div v-if="validation" id="app">
                                 <span>
                                     <button v-on:click="showAlert()" class="btn btn-sm btn-success">Valider</button>
                                 </span>
@@ -50,7 +50,7 @@
 
 export default {
     name:'App',
-    props:['question_id','user_id','verified_user'],
+    props:['question_id','user_id','verified_user','validation'],
     data(){
         return {
             body: '',

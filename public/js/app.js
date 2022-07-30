@@ -5370,7 +5370,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'App',
-  props: ['question_id', 'user_id', 'verified_user'],
+  props: ['question_id', 'user_id', 'verified_user', 'validation'],
   data: function data() {
     return {
       body: '',
@@ -5538,7 +5538,7 @@ var render = function render() {
     return _c("li", {
       key: index,
       staticClass: "list-group-item d-flex flex-column"
-    }, [_c("span", [_c("b", [_vm._v(_vm._s(comment.user.name) + ": ")]), _c("i", [_vm._v(_vm._s(comment.body))])]), _vm._v(" "), _c("span", [_vm._v(_vm._s(comment.created_at))]), _vm._v(" "), _vm.valide ? _c("div", {
+    }, [_c("span", [_c("b", [_vm._v(_vm._s(comment.user.name) + ": ")]), _c("i", [_vm._v(_vm._s(comment.body))])]), _vm._v(" "), _c("span", [_vm._v(_vm._s(comment.created_at))]), _vm._v(" "), _vm.validation ? _c("div", {
       attrs: {
         id: "app"
       }

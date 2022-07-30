@@ -36,7 +36,7 @@
                     question_id="{{$questions->id}}"
                     user_id="{{auth()->check() ? auth()->user()->id: null}}"
                     verified_user="{{auth()->check() && auth()->user()->email_verified_at !==null ? true : false }}"
-                    valide ="{{auth()->check() && auth()->user()->type == "superviseur"}}"
+                    validation ="{{auth()->check() && auth()->user()->type == "superviseur"}}"
                     >
                 </comment-component>
             </div>
