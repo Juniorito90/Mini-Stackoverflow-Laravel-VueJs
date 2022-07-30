@@ -94,9 +94,4 @@ class CommentaireController extends Controller
     {
         //
     }
-
-    public function valider($id){
-        $commentaire = User::find($id);
-        $commentaire-> increment('validation');
-    }
 }

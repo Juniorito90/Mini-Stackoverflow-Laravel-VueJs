@@ -28,12 +28,11 @@
                             v-for="(comment,index) in comments" :key="index">
 
                             <!-- commentaire_id= {{ comment.user.id }} -->
-
                             <span><b>{{comment.user.name}}: </b><i>{{comment.body}}</i></span>
                             <span>{{comment.created_at}}</span>
                             <div v-if="valide" id="app">
                                 <span>
-                                    <button @click="valider" v-on:click="showAlert()" class="btn btn-sm btn-success">Valider</button>
+                                    <button v-on:click="showAlert()" class="btn btn-sm btn-success">Valider</button>
                                 </span>
                             </div>
                         </li>
@@ -51,29 +50,20 @@
 
 export default {
     name:'App',
-    props:['question_id','user_id','verified_user','validation'],
+    props:['question_id','user_id','verified_user'],
     data(){
         return {
             body: '',
             comments: [],
-            nbValidation: 0,
             to : !this.user_id && !this.verified_user ? '/login' : '/email/verify'
         }
     },
     mounted() {
         this.getComments();
-        this.nbValidation = this.validation;
-        this.valide = 1;
     },
     methods:{
         showAlert(){
             alert("Vous avez validé ce commentaire!");
-        },
-        valider(){
-            axios.get(`/api/questions/${this.user_id}/valider`)
-            .then(res => {
-                    this.nbValidation++;
-            }).catch(err => console.log(err));
         },
         addComments(){
             const comment = {body:this.body, question_id:this.question_id,user_id:this.user_id};

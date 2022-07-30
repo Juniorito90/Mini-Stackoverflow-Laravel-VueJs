@@ -5370,35 +5370,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'App',
-  props: ['question_id', 'user_id', 'verified_user', 'validation'],
+  props: ['question_id', 'user_id', 'verified_user'],
   data: function data() {
     return {
       body: '',
       comments: [],
-      nbValidation: 0,
       to: !this.user_id && !this.verified_user ? '/login' : '/email/verify'
     };
   },
   mounted: function mounted() {
     this.getComments();
-    this.nbValidation = this.validation;
-    this.valide = 1;
   },
   methods: {
     showAlert: function showAlert() {
       alert("Vous avez validé ce commentaire!");
     },
-    valider: function valider() {
-      var _this = this;
-
-      axios.get("/api/questions/".concat(this.user_id, "/valider")).then(function (res) {
-        _this.nbValidation++;
-      })["catch"](function (err) {
-        return console.log(err);
-      });
-    },
     addComments: function addComments() {
-      var _this2 = this;
+      var _this = this;
 
       var comment = {
         body: this.body,
@@ -5407,19 +5395,19 @@ __webpack_require__.r(__webpack_exports__);
       };
       axios.post("/api/comments/add", comment).then(function (res) {
         if (res.data.succès) {
-          _this2.body = '';
+          _this.body = '';
 
-          _this2.getComments();
+          _this.getComments();
         }
       })["catch"](function (err) {
         return console.log(err);
       });
     },
     getComments: function getComments() {
-      var _this3 = this;
+      var _this2 = this;
 
       axios.get("/api/question/".concat(this.question_id, "/comments")).then(function (res) {
-        _this3.comments = res.data;
+        _this2.comments = res.data;
       })["catch"](function (err) {
         return console.log(err);
       });
@@ -5557,9 +5545,9 @@ var render = function render() {
     }, [_c("span", [_c("button", {
       staticClass: "btn btn-sm btn-success",
       on: {
-        click: [_vm.valider, function ($event) {
+        click: function click($event) {
           return _vm.showAlert();
-        }]
+        }
       }
     }, [_vm._v("Valider")])])]) : _vm._e()]);
   }), 0) : _c("div", {
